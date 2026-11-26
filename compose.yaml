@@ -1,0 +1,10 @@
+services:
+  studio:
+    build: .
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-8098}:8080"
+    volumes:
+      - training-data:/data
+    restart: unless-stopped
+volumes:
+  training-data:
