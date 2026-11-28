@@ -13,3 +13,6 @@ Run `docker compose up --build -d` and open http://localhost:8098. Data persists
 Try a fictional late arrival: check reservation, confirm assigned site, place welcome packet in lockbox, record handoff. Approve before exporting.
 
 Tests: `python -m unittest -v` after installing requirements. See SPRINTS.md, BACKLOG.md and THIRD_PARTY.md. MIT original code.
+
+## Vercel demonstration
+Vercel automatically uses `/tmp/training.sqlite3`, ignoring `TRAINING_DB` in that environment. This is ephemeral, instance-local, unauthenticated storage; records may disappear or differ between requests and are not private. Use fictional data only. Docker retains its persistent volume. Production hosted use requires authentication and a durable external database.

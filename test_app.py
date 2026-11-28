@@ -1,4 +1,5 @@
 import tempfile, unittest
+from unittest.mock import patch
 from pathlib import Path
 import app
 class Workflow(unittest.TestCase):
@@ -20,4 +21,13 @@ class Workflow(unittest.TestCase):
         self.assertEqual(self.client.post('/draft',data={'title':'','steps':''}).status_code,400)
         self.assertEqual(self.client.post('/approve/999').status_code,404)
         self.assertEqual(self.client.get('/health').status_code,200)
+    def test_vercel_database_path(self):
+        with patch.dict('os.environ', {'VERCEL':'1','TRAINING_DB':'/data/training.sqlite3'}, clear=True):
+            self.assertEqual(app.database_path(), '/tmp/training.sqlite3')
+            self.assertEqual(self.client.get('/').status_code, 200)
+            self.assertIn(b'Temporary public demo', self.client.get('/').data)
+        with patch.dict('os.environ', {'TRAINING_DB':'/data/training.sqlite3'}, clear=True):
+            self.assertEqual(app.database_path(), '/data/training.sqlite3')
+        with patch.dict('os.environ', {}, clear=True):
+            self.assertEqual(app.database_path(), 'training.sqlite3')
 if __name__=='__main__': unittest.main()
